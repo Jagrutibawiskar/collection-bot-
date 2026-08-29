@@ -6,11 +6,30 @@ import { Topbar, LifecyclePill, StageTrack, DayOffsetChip, ChannelBadge } from "
 
 const worklistLifecycles = ["escalated", "disputed", "ptp", "unreachable"];
 const pageSizes = [5, 10, 25, 50];
+const savedViews = [
+  { label: "Unassigned disputes", params: { lifecycle: "disputed", agent: "Unassigned" } },
+  { label: "Red zone", params: { day: "8plus" } },
+  { label: "High value", params: { amount: "high" } }
+];
 
 function maskMobile(value = "+91 98765 43210") {
   const digits = value.replace(/\D/g, "");
   if (digits.length < 4) return "+91 ...";
   return `+91 ... ${digits.slice(-4)}`;
+}
+
+function amountBand(account) {
+  const amount = account.remainingBalance ?? account.amount ?? 0;
+  if (amount >= 1000000) return "high";
+  if (amount >= 500000) return "medium";
+  return "low";
+}
+
+function dueBand(account) {
+  if (account.offset >= 8) return "8plus";
+  if (account.offset >= 1) return "overdue";
+  if (account.offset === 0) return "today";
+  return "upcoming";
 }
 
 export default function Accounts({ worklist = false }) {
@@ -21,6 +40,8 @@ export default function Accounts({ worklist = false }) {
   const stage = searchParams.get("stage") || "all";
   const channel = searchParams.get("channel") || "all";
   const agent = searchParams.get("agent") || "all";
+  const amount = searchParams.get("amount") || "all";
+  const due = searchParams.get("due") || "all";
   const density = searchParams.get("density") || "comfortable";
   const page = Number(searchParams.get("page") || 1);
   const perPage = Number(searchParams.get("per_page") || 10);
@@ -29,6 +50,9 @@ export default function Accounts({ worklist = false }) {
   const [meta, setMeta] = useState({ page: 1, per_page: 10, total: 0 });
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState("");
+  const [customViews, setCustomViews] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("cegura.savedViews") || "[]"); } catch { return []; }
+  });
 
   function updateFilter(key, value) {
     const next = new URLSearchParams(searchParams);
@@ -38,9 +62,7 @@ export default function Accounts({ worklist = false }) {
     setSearchParams(next, { replace: true });
   }
 
-  function updatePage(value) {
-    updateFilter("page", String(value));
-  }
+  function updatePage(value) { updateFilter("page", String(value)); }
 
   function updatePerPage(value) {
     const next = new URLSearchParams(searchParams);
@@ -49,11 +71,28 @@ export default function Accounts({ worklist = false }) {
     setSearchParams(next, { replace: true });
   }
 
+  function applyView(view) {
+    const next = new URLSearchParams();
+    Object.entries(view.params).forEach(([key, value]) => next.set(key, value));
+    next.set("page", "1");
+    setSearchParams(next, { replace: true });
+    setToast(`View applied: ${view.label}`);
+  }
+
+  function saveCurrentView() {
+    const params = Object.fromEntries(searchParams.entries());
+    const label = `Saved view ${customViews.length + 1}`;
+    const nextViews = [...customViews, { label, params }];
+    setCustomViews(nextViews);
+    localStorage.setItem("cegura.savedViews", JSON.stringify(nextViews));
+    setToast(`${label} saved for this browser.`);
+  }
+
   useEffect(() => {
     let active = true;
     setLoading(true);
     const loader = worklist ? getWorklist : getAccounts;
-    loader({ page, per_page: perPage, q: query, lifecycle, stage, channel, agent }).then(result => {
+    loader({ page, per_page: perPage, q: query, lifecycle, stage, channel, agent, amount, due }).then(result => {
       if (!active) return;
       const data = Array.isArray(result) ? result : result?.data || [];
       setAccounts(data);
@@ -61,7 +100,7 @@ export default function Accounts({ worklist = false }) {
       setLoading(false);
     });
     return () => { active = false; };
-  }, [worklist, page, perPage, query, lifecycle, stage, channel, agent]);
+  }, [worklist, page, perPage, query, lifecycle, stage, channel, agent, amount, due]);
 
   const filteredRows = useMemo(() => {
     const base = worklist ? accounts.filter(a => worklistLifecycles.includes(a.lifecycle) || a.offset > 0) : accounts;
@@ -73,22 +112,27 @@ export default function Accounts({ worklist = false }) {
       const matchesStage = stage === "all" || String(a.stage) === stage;
       const matchesChannel = channel === "all" || a.channel === channel;
       const matchesAgent = agent === "all" || a.agent === agent;
-      return matchesSearch && matchesLifecycle && matchesStage && matchesChannel && matchesAgent;
+      const matchesAmount = amount === "all" || amountBand(a) === amount;
+      const matchesDue = due === "all" || dueBand(a) === due;
+      return matchesSearch && matchesLifecycle && matchesStage && matchesChannel && matchesAgent && matchesAmount && matchesDue;
     }).sort((a, b) => worklist ? a.offset - b.offset : b.offset - a.offset);
-  }, [accounts, lifecycle, stage, channel, agent, worklist, query]);
+  }, [accounts, lifecycle, stage, channel, agent, amount, due, worklist, query]);
 
   const totalPages = Math.max(1, Math.ceil(filteredRows.length / perPage));
   const rows = filteredRows.slice((page - 1) * perPage, page * perPage);
   const allVisibleSelected = rows.length > 0 && rows.every(row => selected.includes(row.id));
   const agents = [...new Set(accounts.map(a => a.agent).filter(Boolean))];
   const channels = [...new Set(accounts.map(a => a.channel).filter(Boolean))];
+  const allViews = [...savedViews, ...customViews];
 
   const chips = [
     query && ["Search", query, () => updateFilter("q", "")],
     lifecycle !== "all" && ["Lifecycle", lifecycleLabels[lifecycle], () => updateFilter("lifecycle", "all")],
     stage !== "all" && ["Stage", `Stage ${stage}`, () => updateFilter("stage", "all")],
     channel !== "all" && ["Channel", channel, () => updateFilter("channel", "all")],
-    agent !== "all" && ["Agent", agent, () => updateFilter("agent", "all")]
+    agent !== "all" && ["Agent", agent, () => updateFilter("agent", "all")],
+    amount !== "all" && ["Amount", amount, () => updateFilter("amount", "all")],
+    due !== "all" && ["Due", due, () => updateFilter("due", "all")]
   ].filter(Boolean);
 
   function updateAccount(id, patch, message) {
@@ -124,16 +168,11 @@ export default function Accounts({ worklist = false }) {
     updateAccount(account.id, { lifecycle: "paid", remainingBalance: 0, pendingEmis: 0, channel: "payment", agent: "Closed" }, `${account.name} marked paid. Automation stopped.`);
   }
 
-  function resetFilters() {
-    setSearchParams({}, { replace: true });
-  }
+  function resetFilters() { setSearchParams({}, { replace: true }); }
 
   function exportCsv() {
     const source = selected.length ? filteredRows.filter(a => selected.includes(a.id)) : filteredRows;
-    if (source.length > 10000) {
-      setToast("Large export queued. You will receive the file by email.");
-      return;
-    }
+    if (source.length > 10000) { setToast("Large export queued. You will receive the file by email."); return; }
     const header = ["id", "name", "company", "campaign", "emi", "remaining", "due", "day_offset", "stage", "lifecycle", "zone", "agent"];
     const body = source.map(a => [a.id, a.name, a.client, a.campaign, money(a.emiAmount || a.amount), money(a.remainingBalance ?? a.amount), a.due, dayOffsetLabel(a.offset), `S${a.stage}`, lifecycleLabels[a.lifecycle], zoneClass(a), a.agent]);
     const csv = [header, ...body].map(line => line.map(value => `"${String(value).replaceAll('"', '""')}"`).join(",")).join("\n");
@@ -155,16 +194,17 @@ export default function Accounts({ worklist = false }) {
       <div className={`panel accounts-panel density-${density}`}>
         <div className="panel-header sticky-filter">
           <div><h2>{worklist ? "Human calling queue" : "All accounts"}</h2><span className="muted">{filteredRows.length} visible · {meta.total || accounts.length} total</span></div>
-          <div className="top-actions account-toolbar">
+          <div className="accounts-filter-shell"><div className="accounts-filter-grid">
             <input className="control" placeholder="Search name, loan, campaign" value={query} onChange={event => updateFilter("q", event.target.value)} />
             <select className="control" value={stage} onChange={event => updateFilter("stage", event.target.value)}><option value="all">All stages</option>{[1,2,3,4,5,6].map(item => <option key={item} value={item}>Stage {item}</option>)}</select>
             <select className="control" value={lifecycle} onChange={event => updateFilter("lifecycle", event.target.value)}><option value="all">All lifecycle</option>{Object.entries(lifecycleLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
             <select className="control" value={channel} onChange={event => updateFilter("channel", event.target.value)}><option value="all">All channels</option>{channels.map(item => <option key={item}>{item}</option>)}</select>
+            <select className="control" value={due} onChange={event => updateFilter("due", event.target.value)}><option value="all">All due dates</option><option value="upcoming">Upcoming</option><option value="today">Due today</option><option value="overdue">Overdue</option><option value="8plus">8+ days overdue</option></select>
+            <select className="control" value={amount} onChange={event => updateFilter("amount", event.target.value)}><option value="all">All amounts</option><option value="low">Below ₹5L</option><option value="medium">₹5L-₹10L</option><option value="high">₹10L+</option></select>
             <select className="control" value={agent} onChange={event => updateFilter("agent", event.target.value)}><option value="all">All agents</option>{agents.map(item => <option key={item}>{item}</option>)}</select>
             <select className="control" value={density} onChange={event => updateFilter("density", event.target.value)}><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select>
-            <button type="button" className="ghost" onClick={resetFilters}>Reset</button>
-            <button type="button" className="primary" onClick={exportCsv} disabled={filteredRows.length === 0}>Export</button>
-          </div>
+            <select className="control" defaultValue="" onChange={event => { const view = allViews.find(item => item.label === event.target.value); if (view) applyView(view); event.target.value = ""; }}><option value="">Saved views</option>{allViews.map(view => <option key={view.label}>{view.label}</option>)}</select>
+            </div><div className="accounts-filter-actions"><button type="button" className="ghost" onClick={saveCurrentView}>Save view</button><button type="button" className="ghost" onClick={resetFilters}>Reset</button><button type="button" className="primary" onClick={exportCsv} disabled={filteredRows.length === 0}>Export</button></div></div>
         </div>
         {chips.length > 0 && <div className="filter-chips">{chips.map(([label, value, clear]) => <button type="button" key={label} onClick={clear}>{label}: {value} ×</button>)}<button type="button" onClick={resetFilters}>Clear all</button></div>}
         <div className="table-wrap">
@@ -186,3 +226,4 @@ export default function Accounts({ worklist = false }) {
     </>
   );
 }
+

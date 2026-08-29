@@ -1,30 +1,22 @@
 import { JourneyStrip } from "./ui.jsx";
 
 const features = [
-  {
-    icon: "\u21E7",
-    eyebrow: "01 · Intake",
-    title: "Get accounts in",
-    body: "Upload CSV or XLSX ledgers, map messy columns, validate mobile numbers and preview how many customers will be contacted today."
-  },
-  {
-    icon: "\u25A6",
-    eyebrow: "02 · Monitor",
-    title: "Watch the machine run",
-    body: "Track outstanding balance, collected amount, channel delivery, stage funnel and payment success without losing tenant context."
-  },
-  {
-    icon: "\u260E",
-    eyebrow: "03 · Escalate",
-    title: "Intervene by hand",
-    body: "Send disputes, broken promises and escalated accounts into a focused agent worklist with clear lifecycle state."
-  }
+  { eyebrow: "01 / Import", title: "Clean ledger intake", body: "Upload EMI files, map columns, validate rows and start campaigns only after review." },
+  { eyebrow: "02 / Automate", title: "Day-offset recovery", body: "D-7 and D-4 WhatsApp, D-5 to D-3 SMS, D-1 and D-Day AI voice with automatic stop rules." },
+  { eyebrow: "03 / Escalate", title: "Human handoff", body: "Overdue, disputed and broken promise cases move into a focused manager worklist." }
+];
+
+const metrics = [
+  ["₹21.21 Cr", "portfolio tracked"],
+  ["98%", "SMS delivered"],
+  ["42", "PTP captured"],
+  ["5 min", "payment sync"]
 ];
 
 export default function Landing({ onNavigate }) {
   return (
-    <div className="landing-page">
-      <header className="landing-nav">
+    <div className="landing-page premium-landing">
+      <header className="landing-nav premium-nav">
         <div className="auth-brand">
           <div className="brand-mark">C</div>
           <span>Cegura</span>
@@ -32,69 +24,65 @@ export default function Landing({ onNavigate }) {
         <nav className="landing-links">
           <a href="#product">Product</a>
           <a href="#journey">Journey</a>
-          <a href="#numbers">Results</a>
+          <a href="#reports">Reports</a>
         </nav>
         <div className="landing-nav-actions">
           <button type="button" className="ghost" onClick={() => onNavigate("login")}>Sign in</button>
-          <button type="button" className="primary" onClick={() => onNavigate("signup")}>Get started</button>
+          <button type="button" className="primary" onClick={() => onNavigate("signup")}>Create account</button>
         </div>
       </header>
 
-      <main className="landing-main">
-        <section className="landing-hero public">
-          <div>
-            <span className="eyebrow">Collections command centre</span>
-            <h1>Recover faster, stop every reminder the moment payment lands.</h1>
-            <p>Monitor overdue accounts, import ledgers, track WhatsApp and voice outcomes, and move expensive cases to agents with clean tenant scoping.</p>
+      <main className="landing-main premium-main">
+        <section className="landing-hero public premium-hero">
+          <div className="premium-hero-copy">
+            <span className="eyebrow">AI EMI Collection Platform</span>
+            <h1>Cegura Collections Console</h1>
+            <p>One command center for ledger imports, WhatsApp reminders, SMS nudges, AI voice calls, payment stops and manager handoffs.</p>
             <div className="hero-actions">
-              <button type="button" className="primary" onClick={() => onNavigate("signup")}>Create free account</button>
-              <button type="button" className="ghost" onClick={() => onNavigate("login")}>Sign in to console</button>
-            </div>
-            <div className="hero-metrics" id="numbers">
-              <div><strong>80-95%</strong><span>resolved before agent</span></div>
-              <div><strong>5 min</strong><span>payment reconciliation</span></div>
-              <div><strong>3 roles</strong><span>ops, agent, client</span></div>
+              <button type="button" className="primary" onClick={() => onNavigate("signup")}>Create account</button>
+              <button type="button" className="ghost" onClick={() => onNavigate("login")}>Login to dashboard</button>
             </div>
           </div>
-          <div className="hero-status">
-            <div><span>Machine state</span><strong>Running</strong></div>
-            <div><span>Payment check</span><strong>Every 5 min</strong></div>
-            <div><span>Kill-switch</span><strong>Active</strong></div>
+          <div className="landing-console-preview" aria-label="Collections console preview">
+            <div className="preview-top"><span /> <b>Live recovery desk</b><em>Running</em></div>
+            <div className="preview-grid">
+              {metrics.map(([value, label]) => <div key={label}><strong>{value}</strong><span>{label}</span></div>)}
+            </div>
+            <div className="preview-flow"><JourneyStrip activeIndex={4} /></div>
           </div>
         </section>
 
-        <section className="grid three" id="product">
-          {features.map(f => (
-            <div key={f.title} className="panel feature-panel">
-              <div className="panel-body">
-                <div className="feature-icon">{f.icon}</div>
-                <span className="eyebrow">{f.eyebrow}</span>
-                <h3>{f.title}</h3>
-                <p>{f.body}</p>
-              </div>
-            </div>
-          ))}
+        <section className="landing-feature-band" id="product">
+          {features.map(feature => <article key={feature.title} className="landing-feature-card"><span className="eyebrow">{feature.eyebrow}</span><h3>{feature.title}</h3><p>{feature.body}</p></article>)}
         </section>
 
-        <section className="panel" id="journey" style={{ marginTop: 20 }}>
-          <div className="panel-header"><h2>Collection journey</h2><span>Phase 1 to Phase 2</span></div>
-          <div className="panel-body"><JourneyStrip activeIndex={5} /></div>
-        </section>
-
-        <section className="landing-cta">
+        <section className="landing-split" id="journey">
           <div>
-            <h2>Ready to see the console?</h2>
-            <p>Open the console to manage imports, campaign phases, payments and manager handoffs.</p>
+            <span className="eyebrow">Workflow</span>
+            <h2>From reminder to recovery, without losing control.</h2>
+            <p>Operations can inspect every stage, agents get only the accounts that need human action, and clients can review high-level performance from their own portal.</p>
           </div>
-          <button type="button" className="primary" onClick={() => onNavigate("login")}>Open the demo</button>
+          <div className="landing-checks">
+            <span>Role based login for ops, agents and clients</span>
+            <span>2FA-ready operations access</span>
+            <span>Payment, dispute and opt-out stop rules</span>
+            <span>Exportable audit and reporting trail</span>
+          </div>
+        </section>
+
+        <section className="landing-cta premium-cta" id="reports">
+          <div>
+            <h2>Open the demo console</h2>
+            <p>Start with login, then move into dashboard, imports, accounts, campaigns, reports and audit pages.</p>
+          </div>
+          <button type="button" className="primary" onClick={() => onNavigate("login")}>Open login</button>
         </section>
       </main>
 
       <footer className="landing-foot">
         <span>© {new Date().getFullYear()} Cegura Collections Console</span>
-        <span>AI EMI Collection Platform</span>
+        <span>Built for finance collection operations</span>
       </footer>
     </div>
   );
 }
-
