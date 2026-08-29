@@ -5331,3 +5331,546 @@ button.ghost {
     text-align: left !important;
   }
 }
+
+/* ---------- Classic executive redesign pass ---------- */
+:root {
+  --classic-navy: #081426;
+  --classic-navy-soft: #0e223d;
+  --classic-blue: #1f5fd1;
+  --classic-cyan: #0f7180;
+  --classic-ink: #111827;
+  --classic-muted: #5f7188;
+  --classic-paper: #ffffff;
+  --classic-bg: #f6f9fd;
+  --classic-border: rgba(17, 24, 39, 0.095);
+  --classic-shadow: 0 14px 36px rgba(15, 23, 42, 0.075);
+  --classic-shadow-strong: 0 24px 64px rgba(8, 20, 38, 0.16);
+}
+
+html {
+  background: var(--classic-bg) !important;
+}
+
+body {
+  font-family: Inter, "Plus Jakarta Sans", Manrope, "Segoe UI", system-ui, sans-serif !important;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #f7faff 44%, #eef5fc 100%) !important;
+  color: var(--classic-ink) !important;
+}
+
+h1,
+h2,
+h3,
+.brand strong,
+.auth-brand span,
+.kpi strong,
+.dashboard-kpi strong {
+  font-family: "Plus Jakarta Sans", Inter, "Segoe UI", system-ui, sans-serif !important;
+  font-weight: 850 !important;
+}
+
+.main,
+.landing-page,
+.auth-page {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(246, 249, 253, 0.98)) !important;
+}
+
+@media (min-width: 981px) {
+  .sidebar {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 30%),
+      linear-gradient(180deg, #081426 0%, #0b1a31 52%, #10243f 100%) !important;
+    box-shadow: 16px 0 44px rgba(8, 20, 38, 0.18) !important;
+  }
+
+  .sidebar .brand {
+    padding-bottom: 20px !important;
+  }
+
+  .sidebar .brand-mark,
+  .auth-brand .brand-mark {
+    background: #ffffff !important;
+    color: var(--classic-navy) !important;
+    border: 1px solid rgba(191, 219, 254, 0.48) !important;
+  }
+
+  .nav-button {
+    border-radius: 8px !important;
+    color: #c8d6e8 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .nav-button.active {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(255, 255, 255, 0.16) !important;
+    box-shadow: inset 3px 0 0 #69a7ff, 0 12px 26px rgba(0, 0, 0, 0.18) !important;
+  }
+
+  .nav-button:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .nav-icon {
+    border-radius: 8px !important;
+  }
+}
+
+.topbar {
+  padding-bottom: 14px !important;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.06) !important;
+}
+
+.title h1 {
+  color: var(--classic-ink) !important;
+  font-size: clamp(30px, 3.1vw, 42px) !important;
+  letter-spacing: 0 !important;
+}
+
+.title p {
+  color: var(--classic-muted) !important;
+  font-size: 15px !important;
+}
+
+.panel,
+.table-wrap,
+.kpi,
+.dashboard-kpi,
+.report-card,
+.campaign-card,
+.campaign-rule,
+.account-hero,
+.account-status-card,
+.nextup-card,
+.import-summary-card,
+.confirm-panel,
+.settings-row,
+.modal-card,
+.auth-card {
+  background: var(--classic-paper) !important;
+  border-color: var(--classic-border) !important;
+  border-radius: 10px !important;
+  box-shadow: var(--classic-shadow) !important;
+}
+
+.panel:hover,
+.kpi:hover,
+.dashboard-kpi:hover,
+.report-card:hover,
+.campaign-card:hover,
+.settings-row:hover {
+  box-shadow: 0 18px 46px rgba(15, 23, 42, 0.10) !important;
+}
+
+.panel-header {
+  background: #ffffff !important;
+  border-bottom-color: rgba(17, 24, 39, 0.075) !important;
+}
+
+.panel-header h2,
+.panel-header h3 {
+  color: var(--classic-ink) !important;
+}
+
+.kpi::before,
+.dashboard-kpi::before {
+  background: linear-gradient(180deg, var(--classic-blue), var(--classic-cyan)) !important;
+}
+
+.kpi strong,
+.dashboard-kpi strong {
+  color: #050b14 !important;
+}
+
+.primary,
+button.primary {
+  background: linear-gradient(180deg, #2869df, #1d55bd) !important;
+  border-color: #1d55bd !important;
+  border-radius: 8px !important;
+  box-shadow: 0 10px 22px rgba(31, 95, 209, 0.20) !important;
+}
+
+.ghost,
+button.ghost,
+.control,
+input,
+select,
+textarea {
+  border-radius: 8px !important;
+}
+
+.ghost,
+button.ghost {
+  background: #ffffff !important;
+  border-color: rgba(17, 24, 39, 0.13) !important;
+}
+
+.control,
+input,
+select,
+textarea {
+  background: #ffffff !important;
+  border-color: rgba(17, 24, 39, 0.14) !important;
+}
+
+.table-wrap thead th {
+  background: #f6f8fb !important;
+  color: #52657c !important;
+}
+
+.table-wrap td {
+  color: #243349 !important;
+}
+
+.pill {
+  border-radius: 999px !important;
+  font-weight: 800 !important;
+}
+
+.landing-nav {
+  background: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.045) !important;
+}
+
+.landing-hero,
+.landing-hero.public {
+  border-radius: 16px !important;
+  background:
+    linear-gradient(135deg, rgba(8, 20, 38, 0.98), rgba(16, 36, 63, 0.97)),
+    linear-gradient(45deg, rgba(31, 95, 209, 0.28), transparent 45%) !important;
+  box-shadow: var(--classic-shadow-strong) !important;
+}
+
+.landing-hero h1,
+.landing-hero h2,
+.landing-hero.public h1 {
+  max-width: 780px !important;
+}
+
+.hero-metrics div,
+.hero-status div {
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+
+.auth-page {
+  padding: 34px !important;
+}
+
+.auth-card {
+  width: min(1080px, 100%) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--classic-shadow-strong) !important;
+}
+
+.auth-art {
+  background:
+    linear-gradient(135deg, rgba(8, 20, 38, 0.80), rgba(15, 113, 128, 0.32)),
+    linear-gradient(180deg, #10243f, #0f7180) !important;
+}
+
+.auth-form h1 {
+  font-size: clamp(28px, 3vw, 36px) !important;
+}
+
+.auth-subtitle {
+  color: var(--classic-muted) !important;
+}
+
+.account-toolbar .control,
+.account-toolbar button,
+.top-actions .control,
+.top-actions button {
+  min-height: 42px !important;
+}
+
+@media (max-width: 760px) {
+  .auth-page {
+    padding: 12px !important;
+  }
+
+  .landing-hero,
+  .landing-hero.public,
+  .panel,
+  .table-wrap,
+  .auth-card {
+    border-radius: 10px !important;
+  }
+
+  .title h1 {
+    font-size: 26px !important;
+  }
+}
+
+/* ---------- Screenshot cleanup: calmer classic UI ---------- */
+@media (min-width: 981px) {
+  .sidebar {
+    width: 236px !important;
+    padding: 22px 18px 16px !important;
+    background: linear-gradient(180deg, #0b1b30 0%, #0a1728 100%) !important;
+    box-shadow: 10px 0 28px rgba(10, 23, 40, 0.12) !important;
+  }
+
+  .main {
+    margin-left: 236px !important;
+    width: calc(100% - 236px) !important;
+    padding: 24px 28px 42px !important;
+  }
+
+  .sidebar .brand {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 2px 4px 18px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .sidebar .brand-mark {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 12px !important;
+    font-size: 18px !important;
+    box-shadow: none !important;
+  }
+
+  .sidebar .brand strong {
+    font-size: 18px !important;
+  }
+
+  .sidebar .brand span {
+    font-size: 12px !important;
+  }
+
+  .sidebar nav {
+    gap: 4px !important;
+    padding: 0 3px 8px 0 !important;
+  }
+
+  .nav-button {
+    min-height: 42px !important;
+    padding: 8px 10px !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #c8d6e8 !important;
+    box-shadow: none !important;
+  }
+
+  .nav-icon {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .nav-button.active {
+    background: rgba(255, 255, 255, 0.10) !important;
+    border-color: rgba(255, 255, 255, 0.14) !important;
+    box-shadow: inset 3px 0 0 #4f8df7 !important;
+  }
+
+  .nav-button.active .nav-icon {
+    background: rgba(79, 141, 247, 0.26) !important;
+  }
+
+  .sidebar-footer {
+    padding: 14px 4px 0 !important;
+    gap: 9px !important;
+  }
+
+  .sidebar-footer .avatar {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 10px !important;
+  }
+
+  .sidebar-footer strong {
+    font-size: 13px !important;
+    max-width: 132px !important;
+  }
+
+  .sidebar-footer span {
+    font-size: 12px !important;
+  }
+
+  .sidebar-footer .sign-out {
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 9px !important;
+  }
+
+  .topbar {
+    margin-bottom: 22px !important;
+    padding-bottom: 12px !important;
+  }
+
+  .dashboard-kpi-grid,
+  .kpis {
+    grid-template-columns: repeat(4, minmax(180px, 1fr)) !important;
+    gap: 14px !important;
+  }
+
+  .dashboard-kpi,
+  .kpi {
+    min-height: 118px !important;
+    padding: 18px 20px !important;
+    border-radius: 10px !important;
+  }
+
+  .dashboard-kpi strong,
+  .kpi strong {
+    font-size: clamp(28px, 2.5vw, 34px) !important;
+    margin: 9px 0 4px !important;
+  }
+
+  .dashboard-kpi span,
+  .kpi span {
+    font-size: 14px !important;
+  }
+
+  .dashboard-kpi .delta,
+  .kpi .delta {
+    font-size: 13px !important;
+    line-height: 1.25 !important;
+  }
+
+  .panel,
+  .table-wrap,
+  .dashboard-kpi,
+  .kpi,
+  .report-card,
+  .campaign-card,
+  .settings-row,
+  .account-hero,
+  .nextup-card {
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.055) !important;
+    border-color: rgba(15, 23, 42, 0.075) !important;
+  }
+
+  .panel:hover,
+  .dashboard-kpi:hover,
+  .kpi:hover {
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.075) !important;
+  }
+}
+
+@media (min-width: 981px) and (max-width: 1180px) {
+  .sidebar {
+    width: 218px !important;
+  }
+
+  .main {
+    margin-left: 218px !important;
+    width: calc(100% - 218px) !important;
+  }
+}
+
+/* ---------- Cleaner dashboard stat cards ---------- */
+.dashboard-kpi-grid {
+  align-items: stretch !important;
+}
+
+.dashboard-kpi,
+.kpi {
+  position: relative !important;
+  min-height: 128px !important;
+  padding: 18px 18px 16px !important;
+  border-radius: 12px !important;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%) !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045) !important;
+  overflow: hidden !important;
+}
+
+.dashboard-kpi::before,
+.kpi::before {
+  left: 0 !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: auto !important;
+  width: 100% !important;
+  height: 4px !important;
+  border-radius: 12px 12px 0 0 !important;
+  background: linear-gradient(90deg, #1f5fd1, #0f7180) !important;
+}
+
+.dashboard-kpi::after,
+.kpi::after {
+  content: "";
+  position: absolute;
+  right: -28px;
+  top: -36px;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  background: rgba(31, 95, 209, 0.045);
+  pointer-events: none;
+}
+
+.dashboard-kpi span,
+.kpi span {
+  display: block !important;
+  margin: 2px 0 14px !important;
+  color: #66788d !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  text-transform: none !important;
+}
+
+.dashboard-kpi strong,
+.kpi strong {
+  display: block !important;
+  margin: 0 0 8px !important;
+  color: #07111f !important;
+  font-size: clamp(26px, 2.25vw, 32px) !important;
+  line-height: 1.05 !important;
+  letter-spacing: 0 !important;
+}
+
+.dashboard-kpi .delta,
+.kpi .delta {
+  color: #047857 !important;
+  font-size: 13px !important;
+  font-weight: 750 !important;
+  line-height: 1.35 !important;
+}
+
+.dashboard-kpi:hover,
+.kpi:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(31, 95, 209, 0.18) !important;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.075) !important;
+}
+
+.dashboard-kpi-grid .dashboard-kpi:nth-child(4n + 2)::before,
+.kpis .kpi:nth-child(4n + 2)::before {
+  background: linear-gradient(90deg, #0f7180, #059669) !important;
+}
+
+.dashboard-kpi-grid .dashboard-kpi:nth-child(4n + 3)::before,
+.kpis .kpi:nth-child(4n + 3)::before {
+  background: linear-gradient(90deg, #2563eb, #7c3aed) !important;
+}
+
+.dashboard-kpi-grid .dashboard-kpi:nth-child(4n + 4)::before,
+.kpis .kpi:nth-child(4n + 4)::before {
+  background: linear-gradient(90deg, #b8872f, #dc8a22) !important;
+}
+
+@media (min-width: 981px) {
+  .dashboard-kpi-grid,
+  .kpis {
+    grid-template-columns: repeat(4, minmax(190px, 1fr)) !important;
+    gap: 16px !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .dashboard-kpi,
+  .kpi {
+    min-height: 112px !important;
+    padding: 16px !important;
+  }
+}
