@@ -1,10 +1,12 @@
-// Dummy auth layer. Swap these functions for real /api/auth calls later.
+// Frontend auth mock. Replace with /api/auth/login when backend is ready.
 const DEMO_USERS = [
-  { email: "demo@cegura.io", password: "demo1234", name: "Admin Khan", role: "Operations lead", initials: "AK", tenant: "Acme Utilities" },
-  { email: "agent@cegura.io", password: "agent1234", name: "M. Stone", role: "Recovery agent", initials: "MS", tenant: "Metro Telecom" }
+  { email: "demo@cegura.io", password: "demo1234", name: "Admin Khan", role: "Operations lead", roleKey: "ops_admin", initials: "AK", tenant: "Acme Utilities", requires2fa: true },
+  { email: "agent@cegura.io", password: "agent1234", name: "M. Stone", role: "Recovery agent", roleKey: "agent", initials: "MS", tenant: "Metro Telecom", requires2fa: false },
+  { email: "client@cegura.io", password: "client1234", name: "Client Viewer", role: "Client finance", roleKey: "client", initials: "CV", tenant: "L&T Finance", requires2fa: false }
 ];
 
-export const demoCredentials = { email: "demo@cegura.io", password: "demo1234" };
+export const demoCredentials = { email: "demo@cegura.io", password: "demo1234", otp: "123456" };
+export const roleHome = { ops_admin: "/dashboard", agent: "/worklist", client: "/portal" };
 
 const STORAGE_KEY = "cegura.session";
 
@@ -46,37 +48,43 @@ export function isEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-export function signIn({ email, password }) {
+function publicUser(user) {
+  const { password, requires2fa, ...safe } = user;
+  return safe;
+}
+
+export function signIn({ email, password, otp }) {
   if (!isEmail(email)) return { error: "Enter a valid email address." };
   if (!password) return { error: "Password is required." };
 
   const match = DEMO_USERS.find(u => u.email === email.trim().toLowerCase());
   if (match) {
-    if (match.password !== password) return { error: "Wrong password for this demo account." };
-    const { password: _pw, ...user } = match;
-    return { user };
+    if (match.password !== password) return { error: "Invalid email or password." };
+    if (match.requires2fa && otp !== "123456") return { needs2fa: true, error: otp ? "Enter the 6-digit security code." : "Security code required for operations admin." };
+    return { user: publicUser(match) };
   }
 
-  // Demo mode: any other email works with a 8+ char password.
-  if (password.length < 8) return { error: "Password must be at least 8 characters." };
+  if (password.length < 8) return { error: "Invalid email or password." };
   const name = nameFromEmail(email);
   return {
-    user: { email: email.trim().toLowerCase(), name, role: "Operations lead", initials: initialsFrom(name), tenant: "Acme Utilities" }
+    user: { email: email.trim().toLowerCase(), name, role: "Operations lead", roleKey: "ops_admin", initials: initialsFrom(name), tenant: "Acme Utilities" }
   };
 }
 
-export function signUp({ name, email, password, confirm }) {
+export function signUp({ name, email, password, confirm, roleKey = "ops_admin" }) {
   if (!name.trim()) return { error: "Full name is required." };
   if (!isEmail(email)) return { error: "Enter a valid email address." };
   if (password.length < 8) return { error: "Password must be at least 8 characters." };
   if (password !== confirm) return { error: "Passwords do not match." };
+  const roleLabel = roleKey === "agent" ? "Recovery agent" : roleKey === "client" ? "Client finance" : "Operations lead";
   return {
-    user: { email: email.trim().toLowerCase(), name: name.trim(), role: "Operations lead", initials: initialsFrom(name.trim()), tenant: "Acme Utilities" }
+    user: { email: email.trim().toLowerCase(), name: name.trim(), role: roleLabel, roleKey, initials: initialsFrom(name.trim()), tenant: "Acme Utilities" }
   };
 }
 
-export function ssoSignIn(provider) {
+export function ssoSignIn(provider, roleKey = "ops_admin") {
+  const roleLabel = roleKey === "agent" ? "Recovery agent" : roleKey === "client" ? "Client finance" : "Operations lead";
   return {
-    user: { email: "demo@cegura.io", name: "Admin Khan", role: `Operations lead · ${provider}`, initials: "AK", tenant: "Acme Utilities" }
+    user: { email: "demo@cegura.io", name: "Admin Khan", role: `${roleLabel} - ${provider}`, roleKey, initials: "AK", tenant: "Acme Utilities" }
   };
 }

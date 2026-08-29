@@ -3,7 +3,7 @@ import AuthLayout, { AuthField, AuthDivider, GoogleIcon } from "./AuthLayout.jsx
 import { signUp, ssoSignIn } from "../auth.js";
 
 export default function SignUp({ onAuthenticated, onNavigate }) {
-  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "", roleKey: "ops_admin" });
   const [error, setError] = useState("");
 
   function update(field) {
@@ -23,13 +23,14 @@ export default function SignUp({ onAuthenticated, onNavigate }) {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Spin up a tenant and import your first ledger in minutes."
+      subtitle="Choose the correct role so the console opens the right workspace."
       artCaption="Three roles, one console — ops, agents and clients stay scoped to their own data."
       footer={<>Already have an account? <button type="button" className="link" onClick={() => onNavigate("login")}>Sign in</button></>}
     >
       <form className="auth-form-body" onSubmit={handleSubmit} noValidate>
         <AuthField label="Full name" autoComplete="name" placeholder="Admin Khan" value={form.name} onChange={update("name")} />
         <AuthField label="Work email" type="email" autoComplete="email" placeholder="you@company.com" value={form.email} onChange={update("email")} />
+        <label className="auth-field"><span>Role</span><select className="control" value={form.roleKey} onChange={update("roleKey")}><option value="ops_admin">Operations admin</option><option value="agent">Recovery agent</option><option value="client">Client finance</option></select></label>
         <AuthField label="Password" type="password" autoComplete="new-password" placeholder="At least 8 characters" value={form.password} onChange={update("password")} />
         <AuthField label="Confirm password" type="password" autoComplete="new-password" placeholder="Repeat password" value={form.confirm} onChange={update("confirm")} />
         {error && <div className="auth-alert error">{error}</div>}
@@ -39,9 +40,7 @@ export default function SignUp({ onAuthenticated, onNavigate }) {
       <AuthDivider />
 
       <div className="auth-alt-actions">
-        <button type="button" className="ghost block" onClick={() => onAuthenticated(ssoSignIn("Google").user)}>
-          <GoogleIcon /> Continue with Google
-        </button>
+        <button type="button" className="ghost block" onClick={() => onAuthenticated(ssoSignIn("Google", form.roleKey).user)}><GoogleIcon /> Continue with Google</button>
       </div>
     </AuthLayout>
   );

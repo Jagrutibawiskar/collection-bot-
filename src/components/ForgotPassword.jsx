@@ -21,7 +21,7 @@ export default function ForgotPassword({ onNavigate }) {
     <AuthLayout
       title={sent ? "Check your inbox" : "Reset your password"}
       subtitle={sent
-        ? `We sent reset instructions to ${email.trim()}. Demo build — no real email is delivered.`
+        ? `We sent reset instructions to ${email.trim()}.`
         : "Enter the email tied to your account and we'll send a reset link."}
       artCaption="Kill-switch, audit trail and tenant scoping stay intact through every recovery."
       footer={<>Remembered it? <button type="button" className="link" onClick={() => onNavigate("login")}>Back to sign in</button></>}
@@ -50,3 +50,4 @@ export default function ForgotPassword({ onNavigate }) {
     </AuthLayout>
   );
 }
+

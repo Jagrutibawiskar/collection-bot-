@@ -8,17 +8,17 @@ export function Topbar({ title, subtitle, action }) {
         <p>{subtitle}</p>
       </div>
       <div className="top-actions">
-        <select className="control" defaultValue="Client: Acme Utilities">
-          <option>Client: Acme Utilities</option>
-          <option>North Council</option>
-          <option>Metro Telecom</option>
+        <select className="control" defaultValue="Company: All finance">
+          <option>Company: All finance</option>
+          <option>L&T Finance</option>
+          <option>Mahindra Finance</option>
         </select>
         <select className="control" defaultValue="Last 30 days">
           <option>Last 30 days</option>
           <option>Today</option>
           <option>This month</option>
         </select>
-        <button className="ghost">Admin ▾</button>
+        <button type="button" className="ghost">Admin</button>
         {action}
       </div>
     </div>
@@ -83,4 +83,27 @@ export function Panel({ title, meta, action, bodyClassName = "panel-body", class
       <div className={bodyClassName}>{children}</div>
     </div>
   );
+}
+
+
+
+export function LifecyclePill({ lifecycle, labels = {} }) {
+  return <span className={`pill ${lifecycle}`}>{labels[lifecycle] || lifecycle}</span>;
+}
+
+export function StageTrack({ stage, max = 4 }) {
+  const total = Math.max(max, Number(stage) || 1);
+  return <div className="stage-track" aria-label={`Stage ${stage}`}>{Array.from({ length: total }, (_, index) => <span key={index} className={index < Number(stage) ? "on" : ""} />)}</div>;
+}
+
+export function DayOffsetChip({ offset, label }) {
+  return <span className={`day-chip ${offset > 0 ? "hot" : "cool"}`}>{label}</span>;
+}
+
+export function Money({ amount, formatter }) {
+  return <span className="numeric money-value">{formatter(amount)}</span>;
+}
+
+export function ChannelBadge({ channel, status }) {
+  return <span className="channel-badge"><span>{channel}</span>{status && <small>{status}</small>}</span>;
 }

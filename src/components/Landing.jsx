@@ -84,7 +84,7 @@ export default function Landing({ onNavigate }) {
         <section className="landing-cta">
           <div>
             <h2>Ready to see the console?</h2>
-            <p>Sign in with the demo account — the dashboard is preloaded with sample accounts, campaigns and reports.</p>
+            <p>Open the console to manage imports, campaign phases, payments and manager handoffs.</p>
           </div>
           <button type="button" className="primary" onClick={() => onNavigate("login")}>Open the demo</button>
         </section>
@@ -92,8 +92,9 @@ export default function Landing({ onNavigate }) {
 
       <footer className="landing-foot">
         <span>© {new Date().getFullYear()} Cegura Collections Console</span>
-        <span>Mocked data · Flask/FastAPI ready</span>
+        <span>AI EMI Collection Platform</span>
       </footer>
     </div>
   );
 }
+
